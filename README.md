@@ -1,1 +1,0 @@
-# escola_tempo_integral
