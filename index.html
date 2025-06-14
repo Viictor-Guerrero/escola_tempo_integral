@@ -1,154 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Save the Date - Contagem Regressiva</title>
-    <style>
-        /* As fontes originais */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&family=Roboto:wght@500&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Save the Date - Contagem Regressiva</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&family=Roboto:wght@500&display=swap');
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            /* Adicionado para evitar overflow em telas muito pequenas */
-            padding: 10px;
-            box-sizing: border-box;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .background-container {
-            position: relative;
-            
-            /* O QUE MUDOU (PARTE 1): A base da responsividade */
-            width: 100%;             /* Ocupa 100% do espaço disponível no body */
-            max-width: 1280px;       /* Mas não ultrapassa a largura original da imagem */
-            aspect-ratio: 1280 / 1020; /* Força o container a MANTER a proporção da imagem (largura/altura) */
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden; /* Garante que a imagem maior não crie uma barra de rolagem */
+    }
 
-            background-image: url('save_the_data.jpeg');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
+    .image-wrapper {
+      position: relative;
+      width: 103%;
+      max-width: 1090px;
+    }
 
-        .countdown-container {
-            position: absolute;
+    .responsive-image {
+      width: 100%; /* Ajustado para 100% para melhor controle dentro do wrapper */
+      height: auto;
+      display: block;
+    }
 
-            /* O QUE MUDOU (PARTE 2): A largura agora é relativa */
-            width: 39%; /* 500px é aproximadamente 39% de 1280px. Assim a largura diminui com o container */
+    /* --- AJUSTES PRINCIPAIS AQUI --- */
+    .countdown-container {
+      position: absolute;
+      width: 58%; /* Largura maior para melhor acomodação em telas pequenas */
+      max-width: 500px; /* Limite de largura para telas grandes */
+      left: 34%; /* Centralização correta (passo 1) */
+      transform: translateX(-50%); /* Centralização correta (passo 2) */
+      bottom: 40%;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 10px 15px; /* Ajuste no padding lateral */
+      border-radius: 50px; /* Raio de borda mais consistente */
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
 
-            text-align: center;
-            
-            /* As posições percentuais originais agora funcionam, pois são relativas ao container que está escalando corretamente! */
-            top: 46.5%;
-            left: 28.5%;
-            transform: translate(-40%, -50%);
-        }
+    .title {
+      font-size: clamp(0.1rem, 1.5vw, 0.5rem); /* Fontes mais responsivas */
+      margin-bottom: 0.5px;
+      color: #444;
+    }
 
-        .title {
-            /* A fonte "Spline Sans Medium" não estava importada, voltei para a família Roboto para garantir consistência */
-            font-family: 'Roboto', sans-serif;
-            color: #444;
-            letter-spacing: 0.1rem;
-            margin-bottom: 5px;
-            font-weight: 400;
+    .timer {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: nowrap; /* Impede a quebra de linha dos itens */
+      gap: 10px;
+    }
 
-            /* O QUE MUDOU (PARTE 3): Fonte fluida */
-            font-size: clamp(0.5rem, 1.5vw, 1.0rem); /* Mínimo, Preferencial (escala com a tela), Máximo */
-        }
+    .time-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 0; /* Removido o min-width para permitir que os itens encolham */
+    }
 
-        .timer {
-            display: flex;
-            justify-content: center;
-            /* O QUE MUDOU (PARTE 3): Espaçamento fluido */
-            gap: clamp(5px, 2vw, 20px);
-        }
+    .time-value {
+      font-family: 'Roboto Mono', monospace;
+      font-size: clamp(1.0rem, 2vw, 1.6rem); /* Fontes mais responsivas */
+      font-weight: bold;
+      color: #000;
+    }
 
-        .time-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 0; /* Removido o min-width fixo para permitir que encolha */
-        }
-
-        .time-value {
-            font-family: 'Roboto Mono', monospace;
-            font-weight: 700;
-            color: #000;
-            
-            /* O QUE MUDOU (PARTE 3): Fonte gigante fluida */
-            font-size: clamp(1.5rem, 5.5vw, 3.7rem); /* Mínimo, Preferencial, Máximo */
-        }
-
-        .time-label {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 500;
-            color: #333;
-            margin-top: 2px;
-            
-            /* O QUE MUDOU (PARTE 3): Fonte fluida */
-            font-size: clamp(0.5rem, 1.2vw, 0.8rem);
-        }
-    </style>
+    .time-label {
+      font-size: clamp(0.5rem, 2vw, 0.7rem); /* Fontes mais responsivas */
+      color: #333;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="background-container">
-        <div class="countdown-container">
-            <div class="title"><strong>Contagem regressiva começou </strong> ⏳</div>
-            <div class="timer" id="timer">
-                <div class="time-box">
-                    <div id="days" class="time-value">00</div>
-                    <div class="time-label">DIAS</div>
-                </div>
-                <div class="time-box">
-                    <div id="hours" class="time-value">00</div>
-                    <div class="time-label">HORAS</div>
-                </div>
-                <div class="time-box">
-                    <div id="minutes" class="time-value">00</div>
-                    <div class="time-label">MINUTOS</div>
-                </div>
-                <div class="time-box">
-                    <div id="seconds" class="time-value">00</div>
-                    <div class="time-label">SEGUNDOS</div>
-                </div>
-            </div>
+  <div class="image-wrapper">
+    <img src="save_the_data.jpg" alt="Save the Date" class="responsive-image">
+    <div class="countdown-container">
+      <div class="title"><strong>Contagem regressiva começou</strong> ⏳</div>
+      <div class="timer" id="timer">
+        <div class="time-box">
+          <div id="days" class="time-value">00</div>
+          <div class="time-label">DIAS</div>
         </div>
+        <div class="time-box">
+          <div id="hours" class="time-value">00</div>
+          <div class="time-label">HORAS</div>
+        </div>
+        <div class="time-box">
+          <div id="minutes" class="time-value">00</div>
+          <div class="time-label">MINUTOS</div>
+        </div>
+        <div class="time-box">
+          <div id="seconds" class="time-value">00</div>
+          <div class="time-label">SEGUNDOS</div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // SEU JAVASCRIPT ORIGINAL ESTÁ PERFEITO E NÃO PRECISA DE MUDANÇAS.
-        const countdown = () => {
-            const eventDate = new Date('2025-08-18T00:00:00').getTime();
-            const now = new Date().getTime();
-            const gap = eventDate - now;
-            if (gap < 0) {
-                clearInterval(countdownInterval);
-                document.querySelector('.timer').innerHTML = "<h2 style='color:black;'>O EVENTO COMEÇOU!</h2>";
-                document.querySelector('.title').style.display = 'none';
-                return;
-            }
-            const second = 1000;
-            const minute = second * 60;
-            const hour = minute * 60;
-            const day = hour * 24;
-            const textDay = Math.floor(gap / day);
-            const textHour = Math.floor((gap % day) / hour);
-            const textMinute = Math.floor((gap % hour) / minute);
-            const textSecond = Math.floor((gap % minute) / second);
-            const formatTime = (time) => (time < 10 ? `0${time}` : time);
-            document.getElementById('days').innerText = formatTime(textDay);
-            document.getElementById('hours').innerText = formatTime(textHour);
-            document.getElementById('minutes').innerText = formatTime(textMinute);
-            document.getElementById('seconds').innerText = formatTime(textSecond);
-        };
-        const countdownInterval = setInterval(countdown, 1000);
-        countdown();
-    </script>
+  <script>
+    const countdown = () => {
+      const eventDate = new Date('2025-08-18T00:00:00').getTime();
+      const now = new Date().getTime();
+      const gap = eventDate - now;
 
+      if (gap < 0) {
+        clearInterval(countdownInterval);
+        document.querySelector('.timer').innerHTML = "<h2 style='color:black;'>O EVENTO COMEÇOU!</h2>";
+        document.querySelector('.title').style.display = 'none';
+        return;
+      }
+
+      const second = 1000;
+      const minute = second * 60;
+      const hour = minute * 60;
+      const day = hour * 24;
+
+      const textDay = Math.floor(gap / day);
+      const textHour = Math.floor((gap % day) / hour);
+      const textMinute = Math.floor((gap % hour) / minute);
+      const textSecond = Math.floor((gap % minute) / second);
+
+      const formatTime = (time) => (time < 10 ? `0${time}` : time);
+
+      document.getElementById('days').innerText = formatTime(textDay);
+      document.getElementById('hours').innerText = formatTime(textHour);
+      document.getElementById('minutes').innerText = formatTime(textMinute);
+      document.getElementById('seconds').innerText = formatTime(textSecond);
+    };
+
+    const countdownInterval = setInterval(countdown, 1000);
+    countdown();
+  </script>
 </body>
 </html>
